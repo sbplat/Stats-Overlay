@@ -1,0 +1,1 @@
+windres --input Resource.rc --output Resource.res --output-format=coff

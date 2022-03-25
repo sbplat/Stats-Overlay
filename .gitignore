@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Config file
+config.json
+
+# Logs folder
+logs/
+
+# Resource files
+*.res
