@@ -39,3 +39,6 @@ logs/
 
 # Resource files
 *.res
+
+# Releases
+/release
