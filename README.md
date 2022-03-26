@@ -18,6 +18,8 @@
   <a href="#license">License</a>
 </p>
 
+![screenshot](https://raw.githubusercontent.com/sbplat/Stats-Overlay/main/images/overlay.png)
+
 ## Features
 
 * Simple to use

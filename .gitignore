@@ -31,14 +31,17 @@
 *.out
 *.app
 
+# Releases
+/release
+
+# Resource files
+*.res
+
 # Config file
 config.json
 
 # Logs folder
 logs/
 
-# Resource files
-*.res
-
-# Releases
-/release
+# Test file
+test.txt
