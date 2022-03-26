@@ -56,9 +56,9 @@ If you'd like to build this project from source, you can follow the process show
 > git clone https://github.com/sbplat/Stats-Overlay.git
 ```
 5. Navigate to the cloned repository, open the `res` folder and run `compile.bat` to compile the resource script.
-6. Compile this project with `g++.exe`.
+6. Compile this project with `mingw32-make`.
 ```
-> g++ Overlay.cpp -o Overlay.exe "./res/Resource.res" -std=c++11 -Wall -Wextra -Wno-format -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -mwindows -lcpr -lfmt
+> mingw32-make release
 ```
 7. If the build succeeds, there should be an executable called `Overlay.exe` which is the compiled Stats Overlay!
 
