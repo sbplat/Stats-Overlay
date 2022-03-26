@@ -58,7 +58,7 @@ If you'd like to build this project from source, you can follow the process show
 5. Navigate to the cloned repository, open the `res` folder and run `compile.bat` to compile the resource script.
 6. Compile this project with `mingw32-make`.
 ```
-> mingw32-make release
+> mingw32-make release/debug
 ```
 7. If the build succeeds, there should be an executable called `Overlay.exe` which is the compiled Stats Overlay!
 
