@@ -22,14 +22,14 @@
 
 * Simple to use
 * Shows the stats of other players in your game almost instantly
- - Avoid nicked and sweaty players
+  * Avoid nicked and sweaty players
 * Highly customizable
- - Custom screen size, opacity, background color, scale, font, etc.
+  * Custom screen size, opacity, background color, scale, font, etc.
 * Built in fake full-screen support
 * Configurable game-mode to display
 * Supports most clients
 * Very low CPU and memory usage
- - Written in native C++
+  * Written in native C++
 * Open source
 
 ## Download
