@@ -1,24 +1,32 @@
-CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -Wno-format
-LINKFLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lcpr -lfmt
-RESOURCEFLAGS = "./res/Resource.res"
+CC := g++
+CXX_FLAGS := -std=c++11 -Wall -Wextra -Wno-format
+LINK_FLAGS := -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lcpr -lfmt
+RESOURCE_FLAGS := "./res/Resource.res"
 
-TARGET = Overlay
+TARGET := Overlay
+BUILD_DIR := #./
+BINARY := ${BUILD_DIR}$(TARGET)
+BUILD_TYPE := default
 
-BUILDDIR = .
-BUILDEXE = $(BUILDDIR)/$(TARGET).exe
+.PHONY: all debug release
+all: release
 
-RELEASEFLAGS = -O2 -DNDEBUG -mwindows
-DEBUGFLAGS = -g -O0 -DDEBUG
+debug: BUILD_TYPE := debug
+release: BUILD_TYPE := release
 
-.PHONY: release
+debug: CXX_FLAGS += -g -Og -DDEBUG
+release: CXX_FLAGS += -O2 -DNDEBUG -mwindows
 
-release:
-	$(CXX) $(TARGET).cpp -o $(BUILDEXE) $(RELEASEFLAGS) $(RESOURCEFLAGS) $(CXXFLAGS) $(LINKFLAGS)
+debug: build
+release: build
 
-debug:
-	$(CXX) $(TARGET).cpp -o $(BUILDEXE) $(DEBUGFLAGS) $(RESOURCEFLAGS) $(CXXFLAGS) $(LINKFLAGS)
+# Do not call this rule directly
+build:
+	$(if $(strip $(subst $(BUILD_TYPE),,default)),,$(error Invalid build type [debug/release]))
+	@echo Compiling $(BUILD_TYPE) build...
+	$(CC) $(TARGET).cpp $(RESOURCE_FLAGS) $(CXX_FLAGS) $(LINK_FLAGS) -o $(BINARY).exe
+	@echo Successfully compiled the $(BUILD_TYPE) build!
 
 # Other rules
 clean:
-	del $(TARGET).exe
+	del /s "$(BINARY)".exe
