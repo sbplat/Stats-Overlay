@@ -56,7 +56,7 @@ namespace LogParser {
           hasQuitRegex("^\\[\\d\\d:\\d\\d:\\d\\d\\] \\[Client thread/INFO\\]: \\[CHAT\\] (\\S+) has quit!$"),
           whoCommandRegex("^\\[\\d\\d:\\d\\d:\\d\\d\\] \\[Client thread/INFO\\]: \\[CHAT\\] ONLINE: (.+)$"),
           apiNewRegex("^\\[\\d\\d:\\d\\d:\\d\\d\\] \\[Client thread/INFO\\]: \\[CHAT\\] Your new API key is (.+)$"),
-          extractCompactChat("(.+)( \\[x\\d\\])$");
+          extractCompactChat("(.+) ((\\[x\\d+\\])|(\\(\\d+\\)))$");
 
     void filterPlayers() {
         players.erase(std::remove_if(players.begin(), players.end(),
