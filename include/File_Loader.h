@@ -59,7 +59,7 @@ namespace FL {
               "// renderHeadOverlay: render extra head/face details (true/false)\n"
               "// fakeFullscreen: fake fullscreen support (true/false)\n"
               "// apiKey: Hypixel API key (/api new)\n"
-              "// displayMode: mode to display (solos/doubles/threes/fours/overall)\n"
+              "// displayMode: mode to display (bw_solos/bw_doubles/bw_threes/bw_fours/bw_overall/miniwalls)\n"
               "// titleFontPath: location of font for the title bar\n"
               "// statsFontPath: location of font for the player stats\n"
               "// minecraftLogPath: location of Minecraft's log path\n";
@@ -71,12 +71,29 @@ namespace FL {
         return ss.str();
     }
 
+    enum class Mode {
+        BEDWARS,
+        MINI_WALLS
+    };
+
+    inline std::string modeToString(Mode mode) {
+        switch (mode) {
+            case Mode::BEDWARS:
+                return "BedWars";
+            case Mode::MINI_WALLS:
+                return "Mini Walls";
+            default:
+                return "???";
+        }
+    }
+
     struct Data {
         int screenWidth = 800, opacity = 70, scale = 100, fileDelay = 100, cachePlayerTime = 4 * 60;
         bool renderHeadOverlay = true, fakeFullscreen = true;
         SDL_Color backgroundColor = {50, 50, 50, 255};
-        std::string apiKey = "your-hypixel-api-key-here", displayMode = "overall", minecraftLogPath = "C:/Users/YourName/AppData/Roaming/.minecraft/logs/latest.log",
+        std::string apiKey = "YOUR-HYPIXEL-API-KEY-HERE", displayMode = "bw_overall", minecraftLogPath = "C:/Users/YourName/AppData/Roaming/.minecraft/logs/latest.log",
                     titleFontPath = "./assets/SourceCodePro.ttf", statsFontPath = "./assets/SourceCodePro.ttf";
+        Mode mode = Mode::BEDWARS;
     };
 
     Data config;
@@ -257,12 +274,23 @@ namespace FL {
             try {
                 std::string displayMode = data.at("displayMode");
 
-                if (displayMode == "overall" || displayMode == "solos" || displayMode == "doubles" || displayMode == "threes" || displayMode == "fours") {
-                    config.displayMode = "overall";
+                std::transform(displayMode.begin(), displayMode.end(), displayMode.begin(), [](char &c) {
+                    return std::tolower(c);
+                });
+
+                if (displayMode == "bw_overall" || displayMode == "bw_solos" || displayMode == "bw_doubles" || displayMode == "bw_threes" || displayMode == "bw_fours" || displayMode == "miniwalls") {
+                    config.displayMode = displayMode;
                     spdlog::info("Set displayMode={}", config.displayMode);
 
                 } else {
                     spdlog::info("Invalid displayMode");
+                }
+
+                if (config.displayMode.rfind("bw_", 0) == 0) { // starts with bw_
+                    config.mode = Mode::BEDWARS;
+
+                } else if (config.displayMode == "miniwalls") {
+                    config.mode = Mode::MINI_WALLS;
                 }
 
             } catch (const JSON::json::out_of_range &e) {

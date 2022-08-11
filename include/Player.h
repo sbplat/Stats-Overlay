@@ -25,6 +25,7 @@ SOFTWARE.
 #pragma once
 
 #include "Bedwars.h"
+#include "Mini_Walls.h"
 #include "Types.h"
 
 #include <nlohmann/json.hpp>
@@ -118,7 +119,11 @@ namespace MPI {
     struct PlayerInfoTextures {
         bool init = false;
         SDL2::Texture skin, username, level,
-             FK, FD, FKDR, W, L, WLR,
+             K, D, KDR,
+             FK, FD, FKDR,
+             W, L, WLR,
+             kit, witherKills, witherDamage,
+             arrowsShot, arrowsHit, AHP,
              errorMessage;
         StarTextures stars;
     };
@@ -134,6 +139,7 @@ namespace MPI {
         int networkLevel = 1;
 
         BWI::BedWarsInfo bedwars;
+        MWI::MiniWallsInfo miniWalls;
 
         PlayerInfoTextures textures;
 
@@ -370,6 +376,7 @@ namespace MPI {
 
                     calculateLevel();
                     initBedwarsInfo();
+                    initMiniWallsInfo();
 
                     spdlog::debug("Done updating Hypixel data for player={}", username);
 
@@ -467,6 +474,21 @@ namespace MPI {
             }
 
             bedwars.init();
+        }
+
+        void initMiniWallsInfo() {
+            spdlog::debug("Initializing Mini Walls info for player={}", username);
+
+            miniWalls.username = username;
+
+            try {
+                miniWalls.stats = data.at("player").at("stats").at("Arcade");
+
+            } catch (const JSON::json::out_of_range &e) {
+                spdlog::debug("No Arcade (mini walls) data available for player={}", username);
+            }
+
+            miniWalls.init();
         }
     };
 

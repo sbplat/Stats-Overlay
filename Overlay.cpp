@@ -210,31 +210,52 @@ void renderAllTextures(MPI::PlayerInfoTextures &textures, int height, bool hasEr
         renderText(textures.level, width, height);
         width += 5 * screenWidth * statsFontRatio;
 
-        if (textures.stars.singleColor) {
-            renderText(textures.stars.single, width, height);
-            // render the star symbol
-            int starsTextureW, starsTextureH;
-            SDL_QueryTexture(textures.stars.single.get(), NULL, NULL, &starsTextureW, &starsTextureH);
-            renderText(textures.stars.symbol, width + starsTextureW, height);
+        if (FL::config.mode == FL::Mode::BEDWARS) {
+            if (textures.stars.singleColor) {
+                renderText(textures.stars.single, width, height);
+                // render the star symbol
+                int starsTextureW, starsTextureH;
+                SDL_QueryTexture(textures.stars.single.get(), NULL, NULL, &starsTextureW, &starsTextureH);
+                renderText(textures.stars.symbol, width + starsTextureW, height);
 
-        } else {
-            int starsTextureXPos = renderMultiTexts(textures.stars.multi, width, height);
-            // render the star symbol
-            renderText(textures.stars.symbol, starsTextureXPos, height);
+            } else {
+                int starsTextureXPos = renderMultiTexts(textures.stars.multi, width, height);
+                // render the star symbol
+                renderText(textures.stars.symbol, starsTextureXPos, height);
+            }
+
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.FK, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.FD, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.FKDR, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.W, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.L, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.WLR, width, height);
+
+        } else if (FL::config.mode == FL::Mode::MINI_WALLS) {
+            //renderText(textures.kit, width, height);
+            //width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.K, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.D, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.KDR, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.FK, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.W, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            //renderText(textures.witherKills, width, height);
+            //width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.witherDamage, width, height);
+            width += 5 * screenWidth * statsFontRatio;
+            renderText(textures.arrowsShot, width, height);
         }
-
-        width += 5 * screenWidth * statsFontRatio;
-        renderText(textures.FK, width, height);
-        width += 5 * screenWidth * statsFontRatio;
-        renderText(textures.FD, width, height);
-        width += 5 * screenWidth * statsFontRatio;
-        renderText(textures.FKDR, width, height);
-        width += 5 * screenWidth * statsFontRatio;
-        renderText(textures.W, width, height);
-        width += 5 * screenWidth * statsFontRatio;
-        renderText(textures.L, width, height);
-        width += 5 * screenWidth * statsFontRatio;
-        renderText(textures.WLR, width, height);
     }
 }
 
@@ -261,7 +282,7 @@ int main(int argc, char *args[]) {
     SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
     SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest"); // linear causes the player heads to become blurry
-    // SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+    //SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         spdlog::critical("Error initializing SDL. Error: {}", SDL_GetError());
@@ -362,7 +383,8 @@ int main(int argc, char *args[]) {
     // Create the centered title text
     SDL2::Texture titleTextTexture;
     {
-        SDL2::Surface titleTextSurface(TTF_RenderText_Blended(titleFont.get(), "Stats Overlay (Ctrl+Shift+O)", {255, 255, 255, 255}));
+        std::string windowTitle = "Stats Overlay (Ctrl+Shift+O) - " + FL::modeToString(FL::config.mode);
+        SDL2::Surface titleTextSurface(TTF_RenderText_Blended(titleFont.get(), windowTitle.c_str(), {255, 255, 255, 255}));
         titleTextTexture.reset(SDL_CreateTextureFromSurface(renderer.get(), titleTextSurface.get()));
         int titleTextWidth, titleTextHeight;
         SDL_QueryTexture(titleTextTexture.get(), NULL, NULL, &titleTextWidth, &titleTextHeight);
@@ -408,12 +430,21 @@ int main(int argc, char *args[]) {
         createTextTexture(dummyTextInfo.level, "Level", statsFont);
         createTextTexture(dummyTextInfo.stars.single, "Stars", statsFont);
         createTextTexture(dummyTextInfo.stars.symbol, "", symbolsFont);
+        createTextTexture(dummyTextInfo.K, "K", statsFont);
+        createTextTexture(dummyTextInfo.D, "D", statsFont);
+        createTextTexture(dummyTextInfo.KDR, "KDR", statsFont);
         createTextTexture(dummyTextInfo.FK, "FK", statsFont);
         createTextTexture(dummyTextInfo.FD, "FD", statsFont);
         createTextTexture(dummyTextInfo.FKDR, "FKDR", statsFont);
         createTextTexture(dummyTextInfo.W, "W", statsFont);
         createTextTexture(dummyTextInfo.L, "L", statsFont);
         createTextTexture(dummyTextInfo.WLR, "WLR", statsFont);
+        createTextTexture(dummyTextInfo.kit, "Kit", statsFont);
+        createTextTexture(dummyTextInfo.witherKills, "WK", statsFont);
+        createTextTexture(dummyTextInfo.witherDamage, "WD", statsFont);
+        createTextTexture(dummyTextInfo.arrowsShot, "AS", statsFont);
+        createTextTexture(dummyTextInfo.arrowsHit, "AH", statsFont);
+        createTextTexture(dummyTextInfo.AHP, "AHP", statsFont);
     }
 
     spdlog::info("Raising overlay GUI");
@@ -568,48 +599,68 @@ int main(int argc, char *args[]) {
 
                     } else if (player.bedwars.errorMessage.size() > 0) {
                         errorMessage = player.bedwars.errorMessage;
+
+                    } else if (player.miniWalls.errorMessage.size() > 0) {
+                        errorMessage = player.miniWalls.errorMessage;
                     }
 
                     if (errorMessage.size() == 0) {
-                        BWI::info stats;
-
-                        if (FL::config.displayMode == "solos") {
-                            stats = player.bedwars.solos;
-
-                        } else if (FL::config.displayMode == "doubles") {
-                            stats = player.bedwars.doubles;
-
-                        } else if (FL::config.displayMode == "threes") {
-                            stats = player.bedwars.threes;
-
-                        } else if (FL::config.displayMode == "fours") {
-                            stats = player.bedwars.fours;
-
-                        } else {
-                            stats = player.bedwars.overall;
-                        }
-
                         if (!player.textures.init) {
                             player.textures.init = true;
                             createHeadTexture(player.textures.skin, player.skin);
                             createTextTexture(player.textures.username, player.username, statsFont);
                             createTextTexture(player.textures.level, std::to_string(player.networkLevel), statsFont);
 
-                            if (!player.bedwars.hasMultiStarColor) {
-                                createTextTexture(player.textures.stars.single, std::to_string(player.bedwars.stars), statsFont, player.bedwars.starColor);
+                            if (FL::config.mode == FL::Mode::BEDWARS) {
+                                BWI::info stats;
 
-                            } else {
-                                player.textures.stars.singleColor = false;
-                                createMultiColorTextTexture(player.textures.stars.multi, std::to_string(player.bedwars.stars), statsFont, player.bedwars.starColors);
+                                if (FL::config.displayMode == "bw_solos") {
+                                    stats = player.bedwars.solos;
+
+                                } else if (FL::config.displayMode == "bw_doubles") {
+                                    stats = player.bedwars.doubles;
+
+                                } else if (FL::config.displayMode == "bw_threes") {
+                                    stats = player.bedwars.threes;
+
+                                } else if (FL::config.displayMode == "bw_fours") {
+                                    stats = player.bedwars.fours;
+
+                                } else {
+                                    stats = player.bedwars.overall;
+                                }
+
+                                if (!player.bedwars.hasMultiStarColor) {
+                                    createTextTexture(player.textures.stars.single, std::to_string(player.bedwars.stars), statsFont, player.bedwars.starColor);
+
+                                } else {
+                                    player.textures.stars.singleColor = false;
+                                    createMultiColorTextTexture(player.textures.stars.multi, std::to_string(player.bedwars.stars), statsFont, player.bedwars.starColors);
+                                }
+
+                                createTextTexture(player.textures.stars.symbol, player.bedwars.starSymbol, symbolsFont, player.bedwars.starSymbolColor);
+                                createTextTexture(player.textures.FK, std::to_string(stats.FK), statsFont);
+                                createTextTexture(player.textures.FD, std::to_string(stats.FD), statsFont);
+                                createTextTexture(player.textures.FKDR, to2DPString(stats.FKDR), statsFont);
+                                createTextTexture(player.textures.W, std::to_string(stats.W), statsFont);
+                                createTextTexture(player.textures.L, std::to_string(stats.L), statsFont);
+                                createTextTexture(player.textures.WLR, to2DPString(stats.WLR), statsFont);
+
+                            } else if (FL::config.mode == FL::Mode::MINI_WALLS) {
+                                MWI::info stats = player.miniWalls.overall;
+
+                                createTextTexture(player.textures.kit, stats.activeKit, statsFont);
+                                createTextTexture(player.textures.K, std::to_string(stats.K), statsFont);
+                                createTextTexture(player.textures.D, std::to_string(stats.D), statsFont);
+                                createTextTexture(player.textures.KDR, to2DPString(stats.KDR), statsFont);
+                                createTextTexture(player.textures.FK, std::to_string(stats.FK), statsFont);
+                                createTextTexture(player.textures.W, std::to_string(stats.W), statsFont);
+                                createTextTexture(player.textures.witherKills, std::to_string(stats.witherKills), statsFont);
+                                createTextTexture(player.textures.witherDamage, std::to_string(stats.witherDamage), statsFont);
+                                createTextTexture(player.textures.arrowsShot, std::to_string(stats.arrowsShot), statsFont);
+                                createTextTexture(player.textures.arrowsHit, std::to_string(stats.arrowsHit), statsFont);
+                                createTextTexture(player.textures.AHP, std::to_string(stats.AHP), statsFont);
                             }
-
-                            createTextTexture(player.textures.stars.symbol, player.bedwars.starSymbol, symbolsFont, player.bedwars.starSymbolColor);
-                            createTextTexture(player.textures.FK, std::to_string(stats.FK), statsFont);
-                            createTextTexture(player.textures.FD, std::to_string(stats.FD), statsFont);
-                            createTextTexture(player.textures.FKDR, to2DPString(stats.FKDR), statsFont);
-                            createTextTexture(player.textures.W, std::to_string(stats.W), statsFont);
-                            createTextTexture(player.textures.L, std::to_string(stats.L), statsFont);
-                            createTextTexture(player.textures.WLR, to2DPString(stats.WLR), statsFont);
                         }
 
                         renderAllTextures(player.textures, currentHeight, false);
