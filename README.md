@@ -25,6 +25,7 @@
 * Simple to use
 * Shows the stats of other players in your game almost instantly
   * Avoid nicked and sweaty players
+* Shows stats for BedWars and Mini Walls
 * Highly customizable
   * Custom screen size, opacity, background color, scale, font, etc.
 * Built in fake full-screen support
