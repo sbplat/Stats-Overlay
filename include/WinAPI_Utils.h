@@ -171,13 +171,9 @@ namespace WAPIUtil {
 
                         break;
                     }
-
-                default: {
-                        return CallNextHookEx(NULL, nCode, wParam, lParam);
-                    }
             }
 
-            return 0;
+            return CallNextHookEx(NULL, nCode, wParam, lParam);
         }
 
         void keyboardShortcutLoop() {
