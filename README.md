@@ -1,6 +1,8 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/sbplat/Stats-Overlay"><img src="https://raw.githubusercontent.com/sbplat/Stats-Overlay/main/res/icon.ico" alt="Markdownify" width="200"></a>
+  <a href="https://github.com/sbplat/Stats-Overlay">
+    <img src="/res/icon.ico" alt="Stats Overlay" width="200">
+  </a>
   <br>
   Stats Overlay
   <br>
@@ -18,7 +20,7 @@
   <a href="#license">License</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/sbplat/Stats-Overlay/main/images/screenshot.png)
+![screenshot](/images/screenshot.png)
 
 ## Features
 
@@ -79,4 +81,4 @@ This project uses the following open source libraries:
 
 ## License
 
-This project is licensed under the [MIT license](https://github.com/sbplat/Stats-Overlay/blob/main/LICENSE).
+This project is licensed under the [MIT license](LICENSE).
